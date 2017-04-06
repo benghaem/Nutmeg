@@ -1,5 +1,5 @@
 from graphviz import Graph
-import sys
+import argparse
 
 def create_graph(in_filename, out_filename, engine):
 
@@ -91,6 +91,17 @@ def create_graph(in_filename, out_filename, engine):
     return circuit
 
 if __name__ == "__main__":
-    new_graph = create_graph(sys.argv[1], sys.argv[2], sys.argv[3])
-    new_graph.view()
+    parser = argparse.ArgumentParser(description='Create graphviz files from spice models')
+    parser.add_argument('input_file', type=str, help='the input spice file')
+    parser.add_argument('output_file', type=str, help='the target output graphviz file')
+    parser.add_argument('--gv_engine', type=str, default="neato", help='graphviz display engine (default: neato): dot, neato, twopi, circo, fdp, sfdp, patchwork, osage')
+    parser.add_argument('--skip_render', action='store_true', help='skip rendering output with graphviz')
+
+    args = parser.parse_args()
+
+    new_graph = create_graph(args.input_file, args.output_file, args.gv_engine)
+    if args.skip_render:
+        new_graph.save()
+    else:
+        new_graph.view()
 
