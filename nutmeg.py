@@ -22,6 +22,7 @@ def create_graph(in_filename, out_filename, engine):
 
     top_level_nodes = []
     node_hints = {}
+    conn_ref = {}
 
     with open(in_filename, "r") as spicef:
         for line in spicef:
@@ -31,16 +32,22 @@ def create_graph(in_filename, out_filename, engine):
                 if fet_type == "nfet":
                     target_graph = nmos
                     nmos.node(t_name,shape='diamond')
+                    partial_id = "_n"
                 elif fet_type == "pfet":
                     target_graph = pmos
                     pmos.node(t_name,shape='diamond')
+                    partial_id = "_p"
 
                 connections = [c1,c2,c3,c4]
                 for conn in connections:
+                    if conn not in conn_ref:
+                        conn_ref[conn] = []
                     if conn in top_level_nodes:
                         circuit.edge(t_name, conn)
                     else:
-                        target_graph.edge(t_name, conn)
+                        target_graph.edge(t_name, conn+partial_id)
+                        if conn+partial_id not in conn_ref[conn]:
+                            conn_ref[conn] += [conn+partial_id]
 
             elif ".SUBCKT" in line:
                 top_level_nodes = line.strip().split(" ")[2:]
@@ -67,6 +74,13 @@ def create_graph(in_filename, out_filename, engine):
                         raise ValueError("Bad input")
                     for node in nodes:
                         target_graph.node(node, shape='square')
+
+
+    for conn, parts in conn_ref.items():
+        if len(parts) == 2:
+            circuit.edge(conn, parts[0])
+            circuit.edge(conn, parts[1])
+
 
     circuit.subgraph(nmos)
     circuit.subgraph(pmos)
