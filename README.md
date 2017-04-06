@@ -1,12 +1,12 @@
-#Nutmeg
+# Nutmeg
 
 A simple program to FreePDK15 spice files into graphviz graphs
 
-##Usage
+## Usage
 
 `python nutmeg.py [-h] [--gv_engine GV_ENGINE] [--skip_render] input_file output_file`
 
-##Dependencies
+## Dependencies
 
 * graphviz python library
     `pip install graphviz`
