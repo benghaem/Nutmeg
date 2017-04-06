@@ -1,6 +1,6 @@
 # Nutmeg
 
-A simple program to FreePDK15 spice files into graphviz graphs
+A simple program to convert FreePDK15 spice files into graphviz graphs
 
 ## Usage
 
