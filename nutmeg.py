@@ -23,6 +23,7 @@ def create_graph(in_filename, out_filename, engine):
     top_level_nodes = []
     node_hints = {}
     conn_ref = {}
+    conn_edge_color = ['red','blue' ,'green' ,'black']
 
     with open(in_filename, "r") as spicef:
         for line in spicef:
@@ -39,13 +40,13 @@ def create_graph(in_filename, out_filename, engine):
                     partial_id = "_p"
 
                 connections = [c1,c2,c3,c4]
-                for conn in connections:
+                for i, conn in enumerate(connections):
                     if conn not in conn_ref:
                         conn_ref[conn] = []
                     if conn in top_level_nodes:
-                        circuit.edge(t_name, conn)
+                        circuit.edge(t_name, conn, color=conn_edge_color[i])
                     else:
-                        target_graph.edge(t_name, conn+partial_id)
+                        target_graph.edge(t_name, conn+partial_id, color=conn_edge_color[i])
                         if conn+partial_id not in conn_ref[conn]:
                             conn_ref[conn] += [conn+partial_id]
 
